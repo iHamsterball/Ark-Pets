@@ -336,6 +336,8 @@ public class ArkPets extends InputApplicationAdaptor {
                     hWndMine.setTaskbar(false);
                     Logger.info("Window", "SetForegroundWindow succeeded");
                     isToolwindowStyle = true;
+                    hWndMine.broadcastMessage(0x001A, 0, 0); // WM_SETTINGCHANGE = 0x001A
+                    Logger.debug("Window", "Broadcast WM_SETTINGCHANGE to refresh taskbar");
                     break;
                 }
                 hWndMine.setForeground();

@@ -11,6 +11,8 @@ import com.sun.jna.platform.win32.WinDef.HWND;
 import com.sun.jna.platform.win32.WinDef.RECT;
 import com.sun.jna.platform.win32.WinUser;
 
+import cn.harryh.arkpets.utils.Logger;
+
 import java.util.ArrayList;
 
 
@@ -123,6 +125,32 @@ public class User32HWndCtrl extends HWndCtrl {
         };
         int lParam = (y << 16) | x;
         User32.INSTANCE.SendMessage(hWnd, wmsg, new WinDef.WPARAM(wParam), new WinDef.LPARAM(lParam));
+    }
+
+    /**
+     * Broadcasts a Windows message to all top-level windows.
+     * It is used to notify the Windows Shell (explorer.exe) of system-wide changes,
+     * such as window style modifications, theme changes, or configuration updates.
+     * 
+     * @param msg    The message identifier. Common values include:
+     *               0x001A - WM_SETTINGCHANGE: Notifies applications of system-wide
+     *               parameter changes
+     *               0x0011 - WM_QUERYENDSESSION: Query if the session should end
+     *               0x0012 - WM_QUIT: Post quit message
+     * @param wParam The WPARAM parameter, typically used to specify additional
+     *               message information.
+     * @param lParam The LPARAM parameter, typically used for additional data.
+     */
+    @Override
+    public void broadcastMessage(int msg, int wParam, int lParam) {
+        try {
+            // User32.INSTANCE.PostMessage(WinUser.HWND_BROADCAST, msg, new WinDef.WPARAM(wParam), new WinDef.LPARAM(lParam));
+            // User32.INSTANCE.SendMessage(WinUser.HWND_BROADCAST, msg, new WinDef.WPARAM(wParam), new WinDef.LPARAM(lParam));
+            User32.INSTANCE.SendMessageTimeout(WinUser.HWND_BROADCAST, msg, new WinDef.WPARAM(wParam), new WinDef.LPARAM(lParam), WinUser.SMTO_ABORTIFHUNG, 2000, null);
+            Logger.debug("HWndCtrl", String.format("Broadcast 0x%04X sent", msg));
+        } catch (Exception e) {
+            Logger.warn("HWndCtrl", "Broadcast failed: " + e.getMessage());
+        }
     }
 
     /** Gets the current list of windows.

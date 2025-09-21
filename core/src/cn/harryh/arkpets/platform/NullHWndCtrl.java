@@ -50,6 +50,10 @@ public class NullHWndCtrl extends HWndCtrl {
     }
 
     @Override
+    public void broadcastMessage(int msg, int wParam, int lParam) {
+    }
+
+    @Override
     public boolean equals(Object o) {
         return false;
     }

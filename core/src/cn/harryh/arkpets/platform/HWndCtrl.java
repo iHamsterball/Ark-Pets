@@ -108,6 +108,22 @@ public abstract class HWndCtrl {
         this.glfwHandle = graphics.getWindow().getWindowHandle();
     }
 
+    /**
+     * Broadcasts a Windows message to all top-level windows.
+     * It is used to notify the Windows Shell (explorer.exe) of system-wide changes,
+     * such as window style modifications, theme changes, or configuration updates.
+     * 
+     * @param msg    The message identifier. Common values include:
+     *               0x001A - WM_SETTINGCHANGE: Notifies applications of system-wide
+     *               parameter changes
+     *               0x0011 - WM_QUERYENDSESSION: Query if the session should end
+     *               0x0012 - WM_QUIT: Post quit message
+     * @param wParam The WPARAM parameter, typically used to specify additional
+     *               message information.
+     * @param lParam The LPARAM parameter, typically used for additional data.
+     */
+    public abstract void broadcastMessage(int msg, int wParam, int lParam);
+
     @Override
     public abstract boolean equals(Object o);
 
